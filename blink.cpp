@@ -1,8 +1,13 @@
 // ------------
 // Blink name
 // ------------
-#define UNIT 200 // the unit time
+#include <map>
+
+#define UNIT 200 // the unit time, controls the speed of blink
 const int led = D7;
+const char *name = "JESSIE"; // the name to blink in morse code
+
+std::map<char, char*> morse_code { {'J', ".---",}, {'E', "."}, {'S', "..."}, {'I', ".."}};
 
 void setup() {
   pinMode(led, OUTPUT);
@@ -38,7 +43,26 @@ void between_words() {
     delay(UNIT * 7);
 }
 
+void blink_char(char c) {
+    int i = 0;
+    while (morse_code[c][i]) {
+        if (morse_code[c][i] == '.')
+            dot();
+        else
+            dash();
+        between_parts();
+        i++;
+    }
+}
 
+void blink_name() {
+    int i = 0;
+    while (name[i]) {
+        blink_char(name[i]);
+        between_letters();
+        i++;
+    }
+}
         
 // Next we have the loop function, the other essential part of a microcontroller program.
 // This routine gets repeated over and over, as quickly as possible and as many times as possible, after the setup function is called.
@@ -48,38 +72,8 @@ void between_words() {
 // so arbitrarily long delays can safely be done if you need them.
 
 void loop() {
-    // J '.---'
-    dot();
-    between_parts();
-    dash();
-    between_parts();
-    dash();
-    between_parts();
-    dash();
-    between_letters();
-    // E '.'
-    dot();
-    between_letters();
-    // S '...'
-    dot();
-    between_parts();
-    dot();
-    between_parts();
-    dot();
-    between_letters();
-    // S '...'
-    dot();
-    between_parts();
-    dot();
-    between_parts();
-    dot();
-    between_letters();
-    // I '..'
-    dot();
-    between_parts();
-    dot();
-    between_letters();
-    // E '.'
-    dot();
+    blink_name();
     between_words();
 }
+
+
